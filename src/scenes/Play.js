@@ -17,7 +17,7 @@ class Play extends Phaser.Scene {
 
         this.level = 0
 
-        this.backgroundSpeed = 0.33
+        this.backgroundSpeed = 0.13
     }
 
     create() {
@@ -87,7 +87,11 @@ class Play extends Phaser.Scene {
 
         this.addPlatform1() 
 
-        this.physics.add.collider(this.player, this.platformGroup, this.landSound, null, this)
+        this.physics.add.collider(this.player, this.platformGroup)
+
+        // this.physics.add.collider(this.player, this.platformGroup, function(player, platform) {
+        //     this.sound.play('land', { volume: 0.25 })
+        // })
 
 
         // set up difficulty timer (triggers callback every second)
@@ -129,17 +133,13 @@ class Play extends Phaser.Scene {
 
     }
 
-    landSound(){
-        this.sound.play('land', { volume: 0.25 })
-    }
-
     levelBump() {
         // increment level
         this.level++
     
         // bump speed every 5 levels (until max is hit)
         if(this.level % 5 == 0) {
-            this.backgroundSpeed += 0.05
+            this.backgroundSpeed += 0.01
             console.log("bg up", this.backgroundSpeed)
             console.log(`level: ${this.level}, speed: ${this.platformSpeed}`)
             this.sound.play('levelup', { volume: 0.5 })
@@ -211,7 +211,7 @@ class Play extends Phaser.Scene {
                 quantity: 1000
             }          
         })
-        // make it boom 💥
+        // make it boom
         deathEmitter.explode(1000)
         // create two gravity wells: one offset from player x-position and one at center screen
         deathEmitter.createGravityWell({
