@@ -9,7 +9,8 @@ class Menu extends Phaser.Scene {
         let title02 = this.add.bitmapText(centerX, centerY, 'gem', 'Endless Runner', 64).setOrigin(0.5).setTint(0xff00ff).setBlendMode('SCREEN')
         let title03 = this.add.bitmapText(centerX, centerY, 'gem', 'Endless Runner', 64).setOrigin(0.5).setTint(0xffff00).setBlendMode('ADD')
        
-        this.add.bitmapText(centerX, centerY + textSpacer, 'gem', 'Use Left Arrow & Right Arrow to keep the character in the screen', 13).setOrigin(0.5)
+        this.add.bitmapText(centerX, centerY + textSpacer, 'gem', 'Use Left Arrow & Right Arrow', 25).setOrigin(0.5)
+        this.add.bitmapText(centerX, centerY + textSpacer*1.5, 'gem', 'to keep the character in the screen', 25).setOrigin(0.5)
         this.add.bitmapText(centerX, centerY + textSpacer*3, 'gem', 'Press Right ARROW to Start', 36).setOrigin(0.5)
         //this.add.bitmapText(centerX, h - textSpacer, 'gem', 'Nathan Altice 2017-24', 16).setOrigin(0.5)
 

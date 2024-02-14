@@ -16,6 +16,8 @@ class Play extends Phaser.Scene {
         this.playerSpeed = 350
 
         this.level = 0
+
+        this.backgroundSpeed = 0.33
     }
 
     create() {
@@ -28,12 +30,38 @@ class Play extends Phaser.Scene {
         })
         this.bgm.play()
 
+        this.background = this.add.tileSprite(0, 0, 480, 480, 'Background').setOrigin(0, 0).setScale(5)
+
         // Dynamically calculate center X and Y position
         const centerX = this.sys.game.config.width / 2;
         const centerY = this.sys.game.config.height / 2;
 
         this.deadzoneUp = this.add.tileSprite(0, 435, 480, 13, 'SpikeUp').setOrigin(0, 0).setScale(4.5)
         this.deadzoneDown = this.add.tileSprite(0, 0, 480, 13, 'SpikeDown').setOrigin(0, 0).setScale(2)
+
+        //this.wall = this.add.tileSprite(0, 0, 10, 480, 'Wall').setOrigin(0, 0).setScale(1.5)
+        //this.wall2 = this.add.tileSprite(465, 0, 10, 480, 'Wall').setOrigin(0, 0).setScale(1.5)
+
+        // create animations
+        this.anims.create({
+            key: 'idle-down',
+            frameRate: 0,
+            repeat: -1,
+            frames: this.anims.generateFrameNumbers('Player', {
+                start: 1,
+                end: 1
+            })
+        })
+
+        this.anims.create({
+            key: 'walk-down',
+            frameRate: 5,
+            repeat: -1,
+            frames: this.anims.generateFrameNumbers('Player', {
+                start: 1,
+                end: 2
+            })
+        })
 
         // set up player (physics sprite) and set properties
         this.player = this.physics.add.sprite(centerX, centerY - this.playerHeight, 'Player').setOrigin(0.5).setScale(1.5)
@@ -51,8 +79,6 @@ class Play extends Phaser.Scene {
         this.physics.world.enable(this.deadzoneUp)
         this.physics.world.enable(this.deadzoneDown)
 
-        
-
         // set up platform group
         this.platformGroup = this.add.group({
             runChildUpdate: true,    // make sure update runs on group children          
@@ -61,12 +87,8 @@ class Play extends Phaser.Scene {
 
         this.addPlatform1() 
 
-        this.physics.add.collider(this.player, this.platformGroup)
+        this.physics.add.collider(this.player, this.platformGroup, this.landSound, null, this)
 
-
-        this.physics.add.collider(this.player, this.platformGroup, function(player, platform) {
-            console.log('Player has collided with Platform1.')
-        })
 
         // set up difficulty timer (triggers callback every second)
         this.difficultyTimer = this.time.addEvent({
@@ -88,34 +110,41 @@ class Play extends Phaser.Scene {
     }
 
     update() {
+        this.background.tilePositionY += this.backgroundSpeed
+        //this.wall2.tilePositionY += 1
         // make sure player is still alive
         if(!this.player.destroyed) {
             // check for player input
             if(cursors.left.isDown) {
-                this.player.setVelocityX(-this.playerSpeed);
+                this.player.setVelocityX(-this.playerSpeed)
             } else if(cursors.right.isDown) {
-                this.player.setVelocityX(this.playerSpeed);
+                this.player.setVelocityX(this.playerSpeed)
             } else {
-                this.player.setVelocityX(0); // Stop
+                this.player.setVelocityX(0) // Stop
             }
             // check for collisions
-            //this.physics.world.collide(this.player, this.deadzone, this.playerDead, null, this)
             this.physics.add.overlap(this.player, this.deadzoneUp, this.playerDead, null, this)
             this.physics.add.overlap(this.player, this.deadzoneDown, this.playerDead, null, this)
         }
 
     }
 
+    landSound(){
+        this.sound.play('land', { volume: 0.25 })
+    }
+
     levelBump() {
         // increment level
         this.level++
-
+    
         // bump speed every 5 levels (until max is hit)
         if(this.level % 5 == 0) {
+            this.backgroundSpeed += 0.05
+            console.log("bg up", this.backgroundSpeed)
             console.log(`level: ${this.level}, speed: ${this.platformSpeed}`)
-            this.sound.play('levelup2', { volume: 0.5 })         // play clang to signal speed up
+            this.sound.play('levelup', { volume: 0.5 })
             if(this.platformSpeed >= this.platformSpeedMax) {     // increase platform speed
-                this.platformSpeed -= 30
+                this.platformSpeed -= 20
                 console.debug("speedup".platformSpeed)
             }
             
