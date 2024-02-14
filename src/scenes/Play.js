@@ -11,28 +11,35 @@ class Play extends Phaser.Scene {
         this.playerHeight = 128
         this.playerVelocity = 150
         this.playerX = 32
-        this.playerGravity = 300
+        this.playerGravity = 500
         this.playerBounce = 0.5
-        this.playerSpeed = 200
+        this.playerSpeed = 350
 
         this.level = 0
     }
 
     create() {
-        this.sound.play('bgm', { loop: true, volume: 0.4 })
+        // set up audio, play bgm
+        this.bgm = this.sound.add('bgm', { 
+            mute: false,
+            volume: 0.4,
+            rate: 1,
+            loop: true 
+        })
+        this.bgm.play()
 
         // Dynamically calculate center X and Y position
         const centerX = this.sys.game.config.width / 2;
         const centerY = this.sys.game.config.height / 2;
 
-        this.deadzone = this.add.tileSprite(0, 435, 480, 13, DeadZone).setOrigin(0, 0).setScale(4.5)
-        this.deadzone = this.add.tileSprite(0, 0, 480, 13, 'SpikeDown').setOrigin(0, 0).setScale(3)
+        this.deadzoneUp = this.add.tileSprite(0, 435, 480, 13, 'SpikeUp').setOrigin(0, 0).setScale(4.5)
+        this.deadzoneDown = this.add.tileSprite(0, 0, 480, 13, 'SpikeDown').setOrigin(0, 0).setScale(2)
 
         // set up player (physics sprite) and set properties
-        this.player = this.physics.add.sprite(centerX, centerY - this.playerHeight, 'Player').setOrigin(0.5).setScale(2)
+        this.player = this.physics.add.sprite(centerX, centerY - this.playerHeight, 'Player').setOrigin(0.5).setScale(1.5)
         this.player.setCollideWorldBounds(true)
         //this.player.setBounce(this.playerBounce)
-        this.player.setImmovable()
+        //this.player.setImmovable()
         this.player.destroyed = false       // custom property to track player life
         this.player.setBlendMode('SCREEN')  // set a WebGL blend mode
 
@@ -41,15 +48,25 @@ class Play extends Phaser.Scene {
         this.player.setGravityY(this.playerGravity) // Set gravity for the player
         this.player.setCollideWorldBounds(true) // Enable collision with the world bounds
 
+        this.physics.world.enable(this.deadzoneUp)
+        this.physics.world.enable(this.deadzoneDown)
+
+        
+
         // set up platform group
         this.platformGroup = this.add.group({
-            runChildUpdate: true,    // make sure update runs on group children
-            immovable: true,
-            allowGravity: false
-            
+            runChildUpdate: true,    // make sure update runs on group children          
         })
 
+
         this.addPlatform1() 
+
+        this.physics.add.collider(this.player, this.platformGroup)
+
+
+        this.physics.add.collider(this.player, this.platformGroup, function(player, platform) {
+            console.log('Player has collided with Platform1.')
+        })
 
         // set up difficulty timer (triggers callback every second)
         this.difficultyTimer = this.time.addEvent({
@@ -59,9 +76,6 @@ class Play extends Phaser.Scene {
             loop: true
         })
 
-        this.physics.add.collider(this.player, this.platformGroup)
-        this.physics.add.collider(this.player, this.deadzone)
-
         // set up cursor keys
         cursors = this.input.keyboard.createCursorKeys()
         
@@ -69,7 +83,7 @@ class Play extends Phaser.Scene {
 
     // create new platform
     addPlatform1() {
-        let platform = new Platform1(this, this.platformSpeed, this.playerWidth, this.playerHeight).setScale(3)
+        let platform = new Platform1(this, this.platformSpeed, this.playerWidth, this.playerHeight).setScale(2)
         this.platformGroup.add(platform)
     }
 
@@ -85,15 +99,12 @@ class Play extends Phaser.Scene {
                 this.player.setVelocityX(0); // Stop
             }
             // check for collisions
-            this.physics.world.collide(this.player, this.deadzone, this.playerDead, null, this)
+            //this.physics.world.collide(this.player, this.deadzone, this.playerDead, null, this)
+            this.physics.add.overlap(this.player, this.deadzoneUp, this.playerDead, null, this)
+            this.physics.add.overlap(this.player, this.deadzoneDown, this.playerDead, null, this)
         }
 
     }
-
-    // handleCollision(p1Rocket, ship){
-    //     p1Rocket.reset()
-    //     this.shipExplode(ship)
-    // }
 
     levelBump() {
         // increment level
@@ -104,7 +115,7 @@ class Play extends Phaser.Scene {
             console.log(`level: ${this.level}, speed: ${this.platformSpeed}`)
             this.sound.play('levelup2', { volume: 0.5 })         // play clang to signal speed up
             if(this.platformSpeed >= this.platformSpeedMax) {     // increase platform speed
-                this.platformSpeed -= 50
+                this.platformSpeed -= 30
                 console.debug("speedup".platformSpeed)
             }
             

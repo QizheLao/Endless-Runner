@@ -11,7 +11,7 @@ class DeadZone extends Phaser.Physics.Arcade.Sprite {
         this.parentScene.physics.add.existing(this)    // add to physics system
 
         //this.setVelocityY(-Math.abs(velocity)); // Ensure negative velocity to move up
-        this.setImmovable()                    
+        this.setImmovable(true)                    
         //this.tint = Math.random() * 0xFFFFFF   // randomize tint
         //this.newplatform = true   
     }
