@@ -11,13 +11,11 @@ class Platform1 extends Phaser.Physics.Arcade.Sprite {
 
         this.setVelocityY(-Math.abs(velocity)) // Ensure negative velocity to move up
         this.setImmovable(true)                  
-        //this.tint = Math.random() * 0xFFFFFF   // randomize tint
         this.newplatform = true   
         
     }
 
     update() {
-        //if(this.newplatform && this.y < game.config.height / 2)
         if(this.newplatform && this.y < 480) {
             this.parentScene.addPlatform1(this.parent, this.velocity)
             this.newplatform = false
