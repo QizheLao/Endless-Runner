@@ -11,13 +11,17 @@ class Play extends Phaser.Scene {
         this.playerHeight = 128
         this.playerVelocity = 150
         this.playerX = 32
-        this.playerGravity = 500
+        this.playerGravity = 700
         this.playerBounce = 0.5
         this.playerSpeed = 350
 
         this.level = 0
 
         this.backgroundSpeed = 0.13
+    }
+
+    preload() {
+        this.load.atlas('sprite', './assets/img/Player-Sheet.png', './assets/img/sprites.json')
     }
 
     create() {
@@ -36,7 +40,7 @@ class Play extends Phaser.Scene {
         const centerX = this.sys.game.config.width / 2;
         const centerY = this.sys.game.config.height / 2;
 
-        this.deadzoneUp = this.add.tileSprite(0, 435, 480, 13, 'SpikeUp').setOrigin(0, 0).setScale(4.5)
+        this.deadzoneUp = this.add.tileSprite(0, 580, 480, 13, 'SpikeUp').setOrigin(0, 0).setScale(4.5)
         this.deadzoneDown = this.add.tileSprite(0, 0, 480, 13, 'SpikeDown').setOrigin(0, 0).setScale(2)
 
         //this.wall = this.add.tileSprite(0, 0, 10, 480, 'Wall').setOrigin(0, 0).setScale(1.5)
@@ -44,27 +48,43 @@ class Play extends Phaser.Scene {
 
         // create animations
         this.anims.create({
-            key: 'idle-down',
+            key: 'idle',
             frameRate: 0,
             repeat: -1,
-            frames: this.anims.generateFrameNumbers('Player', {
-                start: 1,
-                end: 1
-            })
+            frames: this.anims.generateFrameNames('sprite', {
+                prefix:'sprite',
+                start:1,
+                end:1
+            }),
+            //repeat: -1
         })
 
         this.anims.create({
-            key: 'walk-down',
+            key: 'left',
             frameRate: 5,
             repeat: -1,
-            frames: this.anims.generateFrameNumbers('Player', {
-                start: 1,
-                end: 2
-            })
+            frames: this.anims.generateFrameNames('sprite', {
+                prefix:'sprite',
+                start:5,
+                end:7
+            }),
+            //repeat: -1
+        })
+
+        this.anims.create({
+            key: 'right',
+            frameRate: 5,
+            repeat: -1,
+            frames: this.anims.generateFrameNames('sprite', {
+                prefix:'sprite',
+                start:2,
+                end:4
+            }),
+            
         })
 
         // set up player (physics sprite) and set properties
-        this.player = this.physics.add.sprite(centerX, centerY - this.playerHeight, 'Player').setOrigin(0.5).setScale(1.5)
+        this.player = this.physics.add.sprite(centerX, centerY - this.playerHeight, 'sprite', 0).setOrigin(0.5).setScale(1.5)
         this.player.setCollideWorldBounds(true)
         //this.player.setBounce(this.playerBounce)
         //this.player.setImmovable()
@@ -115,16 +135,18 @@ class Play extends Phaser.Scene {
 
     update() {
         this.background.tilePositionY += this.backgroundSpeed
-        //this.wall2.tilePositionY += 1
         // make sure player is still alive
         if(!this.player.destroyed) {
             // check for player input
             if(cursors.left.isDown) {
                 this.player.setVelocityX(-this.playerSpeed)
+                this.player.play('left', true)
             } else if(cursors.right.isDown) {
                 this.player.setVelocityX(this.playerSpeed)
+                this.player.play('right', true)
             } else {
                 this.player.setVelocityX(0) // Stop
+                this.player.play('idle')
             }
             // check for collisions
             this.physics.add.overlap(this.player, this.deadzoneUp, this.playerDead, null, this)
@@ -144,7 +166,7 @@ class Play extends Phaser.Scene {
             console.log(`level: ${this.level}, speed: ${this.platformSpeed}`)
             this.sound.play('levelup', { volume: 0.5 })
             if(this.platformSpeed >= this.platformSpeedMax) {     // increase platform speed
-                this.platformSpeed -= 20
+                //this.platformSpeed -= 20
                 console.debug("speedup".platformSpeed)
             }
             

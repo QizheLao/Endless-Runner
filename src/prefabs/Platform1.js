@@ -20,7 +20,7 @@ class Platform1 extends Phaser.Physics.Arcade.Sprite {
         
         // Adjust to add new barrier when the platform is about halfway up the screen\
         //if(this.newplatform && this.y < game.config.height / 2)
-        if(this.newplatform && this.y < 280) {
+        if(this.newplatform && this.y < 500) {
             this.parentScene.addPlatform1(this.parent, this.velocity);
             this.newplatform = false;
         }

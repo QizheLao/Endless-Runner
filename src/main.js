@@ -1,7 +1,7 @@
 let config = {
     type: Phaser.AUTO,
     width: 480,
-    height: 480,
+    height: 640,
     render: {
       pixelArt: true
     },
@@ -28,6 +28,3 @@ const textSpacer = 64
 let highScore
 let newHighScore = false
 let cursors
-
-//reserve keyboard bindings
-let keyLEFT, keyRIGHT
