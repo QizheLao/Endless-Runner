@@ -5,7 +5,6 @@ class Load extends Phaser.Scene {
 
     preload() {
         // loading bar
-        // see: https://rexrainbow.github.io/phaser3-rex-notes/docs/site/loader/
         let loadingBar = this.add.graphics()
         this.load.on('progress', (value) => {
             loadingBar.clear()                              // reset fill/line style
@@ -17,13 +16,13 @@ class Load extends Phaser.Scene {
         })
 
         this.load.path = './assets/'
+
         // load graphics assets
         this.load.image('Background', 'img/Background.png')
         this.load.image('NormalPlatform', 'img/NormalPlatform.png')
         this.load.image('Player', 'img/Player.png')
         this.load.image('SpikeDown', 'img/SpikeDown.png')
         this.load.image('SpikeUp', 'img/SpikeUp.png')
-        this.load.image('Wall', 'img/Wall.png')
         
         // load audio assets
         this.load.audio('bgm', ['audio/Bgm.mp3'])
@@ -33,6 +32,7 @@ class Load extends Phaser.Scene {
         this.load.audio('land', ['audio/Land.wav'])
         this.load.audio('walk', ['audio/Walk.wav'])
         this.load.audio('levelup', ['audio/maou_se_8bit10.mp3'])
+
         // load font
         this.load.bitmapFont('gem', 'font/gem.png', 'font/gem.xml')
     }

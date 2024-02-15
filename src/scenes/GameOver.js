@@ -12,20 +12,16 @@ class GameOver extends Phaser.Scene {
         // uncomment console.log statements if you need to debug local storage
         if(localStorage.getItem('hiscore') != null) {
             let storedScore = parseInt(localStorage.getItem('hiscore'))
-            //console.log(`storedScore: ${storedScore}`)
             // see if current score is higher than stored score
             if(this.level > storedScore) {
-                //console.log(`New high score: ${this.level}`)
                 localStorage.setItem('hiscore', this.level.toString())
                 highScore = this.level
                 newHighScore = true
             } else {
-                //console.log('No new high score :/')
                 highScore = parseInt(localStorage.getItem('hiscore'))
                 newHighScore = false
             }
         } else {
-            //console.log('No high score stored. Creating new.')
             highScore = this.level
             localStorage.setItem('hiscore', highScore.toString())
             newHighScore = true
@@ -50,14 +46,6 @@ class GameOver extends Phaser.Scene {
         if (Phaser.Input.Keyboard.JustDown(cursors.right)) {
             let textureManager = this.textures
             console.log(textureManager)
-            // take snapshot of the entire game viewport (same as title screen)
-            this.game.renderer.snapshot((snapshotImage) => {
-                console.log('took snapshot in GameOver')
-                if(textureManager.exists('titlesnapshot')) {
-                    textureManager.remove('titlesnapshot')
-                }
-                textureManager.addImage('titlesnapshot', snapshotImage)
-            })
 
             // start next scene
             this.sound.play('click2', { volume: 1 })

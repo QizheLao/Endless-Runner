@@ -17,7 +17,7 @@ class Play extends Phaser.Scene {
 
         this.level = 0
 
-        this.backgroundSpeed = 0.13
+        this.backgroundSpeed = 0.34
     }
 
     preload() {
@@ -37,14 +37,11 @@ class Play extends Phaser.Scene {
         this.background = this.add.tileSprite(0, 0, 480, 480, 'Background').setOrigin(0, 0).setScale(5)
 
         // Dynamically calculate center X and Y position
-        const centerX = this.sys.game.config.width / 2;
-        const centerY = this.sys.game.config.height / 2;
+        const centerX = this.sys.game.config.width / 2
+        const centerY = this.sys.game.config.height / 2
 
         this.deadzoneUp = this.add.tileSprite(0, 580, 480, 13, 'SpikeUp').setOrigin(0, 0).setScale(4.5)
         this.deadzoneDown = this.add.tileSprite(0, 0, 480, 13, 'SpikeDown').setOrigin(0, 0).setScale(2)
-
-        //this.wall = this.add.tileSprite(0, 0, 10, 480, 'Wall').setOrigin(0, 0).setScale(1.5)
-        //this.wall2 = this.add.tileSprite(465, 0, 10, 480, 'Wall').setOrigin(0, 0).setScale(1.5)
 
         // create animations
         this.anims.create({
@@ -56,7 +53,6 @@ class Play extends Phaser.Scene {
                 start:1,
                 end:1
             }),
-            //repeat: -1
         })
 
         this.anims.create({
@@ -68,7 +64,6 @@ class Play extends Phaser.Scene {
                 start:5,
                 end:7
             }),
-            //repeat: -1
         })
 
         this.anims.create({
@@ -86,8 +81,6 @@ class Play extends Phaser.Scene {
         // set up player (physics sprite) and set properties
         this.player = this.physics.add.sprite(centerX, centerY - this.playerHeight, 'sprite', 0).setOrigin(0.5).setScale(1.5)
         this.player.setCollideWorldBounds(true)
-        //this.player.setBounce(this.playerBounce)
-        //this.player.setImmovable()
         this.player.destroyed = false       // custom property to track player life
         this.player.setBlendMode('SCREEN')  // set a WebGL blend mode
 
@@ -108,11 +101,6 @@ class Play extends Phaser.Scene {
         this.addPlatform1() 
 
         this.physics.add.collider(this.player, this.platformGroup)
-
-        // this.physics.add.collider(this.player, this.platformGroup, function(player, platform) {
-        //     this.sound.play('land', { volume: 0.25 })
-        // })
-
 
         // set up difficulty timer (triggers callback every second)
         this.difficultyTimer = this.time.addEvent({
@@ -161,12 +149,12 @@ class Play extends Phaser.Scene {
     
         // bump speed every 5 levels (until max is hit)
         if(this.level % 5 == 0) {
-            this.backgroundSpeed += 0.01
+            this.backgroundSpeed += 0.04
             console.log("bg up", this.backgroundSpeed)
             console.log(`level: ${this.level}, speed: ${this.platformSpeed}`)
             this.sound.play('levelup', { volume: 0.5 })
             if(this.platformSpeed >= this.platformSpeedMax) {     // increase platform speed
-                //this.platformSpeed -= 20
+                this.platformSpeed -= 15
                 console.debug("speedup".platformSpeed)
             }
             

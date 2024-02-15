@@ -1,3 +1,11 @@
+// Qizhe Lao
+// Game Name: Call Don't fall
+// Trying to survive on these constantly rising platforms
+// Spent about 34 hour
+// For the code, I redesigned the density and speed of the generating platforms, the player's physics and the movement method to make the game play smoother. 
+// For the art, I'm very satisfied with the backgrounds, player, and platforms I made. 
+// Keeping the art styles of both similar while still maintaining recognizable features took me quite a bit of time.
+
 let config = {
     type: Phaser.AUTO,
     width: 480,
