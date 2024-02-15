@@ -29,7 +29,7 @@ class GameOver extends Phaser.Scene {
 
         // add GAME OVER text
         if(newHighScore) {
-            this.add.bitmapText(centerX, centerY - textSpacer, 'gem', 'New Hi-Score!', 32).setOrigin(0.5)
+            this.add.bitmapText(centerX, centerY - textSpacer*2, 'gem', 'New Hi-Score!', 32).setOrigin(0.5)
         }
         this.add.bitmapText(centerX, centerY + -textSpacer*3, 'gem', `Audio bgm, death, LVup ftom: MaouDamashii`, 15).setOrigin(0.5)
         this.add.bitmapText(centerX, centerY + -textSpacer, 'gem', `YOU DIED`, 48).setOrigin(0.5)
